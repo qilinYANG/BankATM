@@ -1,0 +1,158 @@
+# CS611-ATM
+
+Team Member:
+
+Hui Zheng (U80896784)
+Kangning Zhang （U31078191)
+Qilin Yang (U73204239)
+
+------------------------------------------------------------------------------------------------
+
+
+Compilation Instruction:
+
+1) Set your working directory so that it holds the submitted java files.
+2) Add Sqlite jdbc driver to buildpath
+3) Run > javac *.java
+4) Run > java Main
+
+
+------------------------------------------------------------------------------------------------
+Potentail Extra Credit and Notes:
+1. Using Databse service to handle data flow among transaction and account activity, which is robust to handle all service from front and back end
+2. Encapsulating on each component, exposing interface and class type for external use
+3. Isolating each type of service. Each service is in singleton pattern, As programming running, service is create and managed by ServiceManager object
+4. Decoupling Front-end and Back-end to independent component. Back-end Encapsulate class and service object to a reference. Front end use the reference for function call
+5. Design Pattern:
+    SingleTon: Singlton Pattern applied in the creation of service object , only one instance exist while the programme is running
+    is running
+    Factory: Factory model applied in account creation, when client choose type of account they want to create, account factory will create corresponding account instance
+    Composition: Composition Pattern applied in multiple currency accout. Given an acount able to hold multiple currecny. It has a collection of other Balance instances underneath
+    Strategy: Strategy pattern is widely applied in account, user, transaction entity creation. Interface or super-class as the foundation stone for creating more complex class
+    Proxy: fees will collected by Proxy classes
+
+
+-------------------------------------------------------------------------------------------------
+Class Description
+
+database: Create database and Handle data processing
+        DatabaseManager: the class that manage the database, provide connection to database
+
+entity: Define property of accounts, transactions and users
+        account: accounts related classes
+                deposit: checking account + saving account
+                        AbsDepositAccount: Abstract class define basic functionality of depositable account
+                        CheckingAccount: checking account properties
+                        IDepositAccount: the interface for depositable account
+                        SavingAccount: saving account properties
+                        
+                loan: loan acocunt
+                        LoanAccount: Extend from AbsSingleCurrencyAccount
+                        ILoanAccount: the interface that defines function of loan account
+                
+                security:
+                        SecurityAccount: security account properties
+                        ISecurityAccount: the interface defines function of security acocunt
+                
+                AbsAccount: Abstract class define account functionality
+                AbsMultipleCurrencyAccount: Account that can hold multiple currency and define account operation
+                AbsSingleCurrencyAccount:  Define Account that can only hold USD
+                AccountCollection: Collection all types of accounts. Can return account instance by account number or account type
+                AccountFactory:  use to create account base on specified account type
+                StockCollection: Collection all stock instance, define all stock operation methods and implementation
+                
+                IAccount: Account Interface
+                IMultipleCurrencyAccount: Interface for multiplecurrency account, corresponding method signature
+                ISingleCUrrencyAccount: Interface for singleCurrency account, corresponding method signature
+        
+        
+        transaction: classes related to transactions
+                Deposit: Handle account deposit
+                StockBuy: handle stock purchase
+                StockSell: handle stock selling
+                StockTrade: super class for stock trading
+                Transaction: Super class of transaction and define all transcation method
+                Transfer: Handle money transfer between 2 accounts
+                Withdraw: handle account withdraw
+                ITransaction: interface for transaction
+        
+        
+        user: define the properties of users of the ATM system
+                AbsATMUser: Abstract user class
+                ATMAdmin: Adminster class extend from AbsATMUser, can access all info
+                Customer: client extend from AbsATMUser
+                IUser: user interface
+
+        Balance: define currency type and value
+        Interest: define interest type and value
+        PurchasedStock: define purchased stock for an user
+        Stock: define stock property
+        StockTable: Collection of all stock
+
+serverUtil:
+        AccountType: enumerating 4 type of account
+        TradeType: enumerating 2 types of trading (purchase & sell)
+        TransactionType: enumerating 5 types of transaction
+
+
+service:
+        account:
+                AccountService: define and implement services associated with an acccount
+                IAccountService: account service interface
+        
+        database:
+               
+                DatabaseService: add, delete, update,and search operation on database regarding ATM operation
+                IDatabaseService: Interface on database service
+        
+        manager:
+                ManagerReviewService: implement authority and accessibility power for manager
+                IManagerReviewService: Interface for manager review service
+        
+        system:
+                SystemService: services include distributing interest fee and collecting fee from account
+                ISystemService: defines system services
+
+        transaction:
+                TransactionService: Implementing transaction functionality 
+                ITransactionService: interface defines transaction services
+        
+        user:
+                IUserservice: defines the services related to a user
+                Userservice: implements the services for a user
+                
+        ServiceManager: Handle service request from front end and return singleTon service instance        
+        IService: interface to define a service
+
+view:
+        Customer: customer related windows/JFrames
+                Checking: view chacking account
+                Loan: view loan account
+                NewAccount: create a new account
+                Saving: view saving account
+                Security: view security account
+                Transfer: transfer between two accounts
+                ViewAccount: view all accounts of a customer
+        
+        util: JDialogs used as pop-ups for each type of service request
+                CloseA: close a account
+                Congrats: for successfully create a new user
+                Deposit: deposit money into saving/checking account
+                Exit: exit the whole program
+                Greetings: final surprise
+                History: check transaction history
+                Invalid: invalid input
+                PayLoan: pay loan 
+                TradeStock: trade stock
+                View: util methods to set font for each window
+                Withdraw: withdraw money  
+                AddListener: the interface for all windows to add ActionListener
+
+        ATMWindow: the abstract class with basic ATM componets (time, title, exit button)
+        ExistClient: for exist client to log in
+        NewClient: to create a new user
+        Option: after log in, options for a user
+        Welcome: welcome window
+        WelcomeClient: welcome window 2
+
+Main: main class to start the program
